@@ -1,6 +1,6 @@
 <?
 
-//Classe : classe_match.php
+//Classe : classe_matchs.php
 //Auteur : VERRIER Alexandre
 //Date   : 25/02/15
 //Texte  : Classe permettant la gestion d'un match
@@ -10,73 +10,180 @@ require_once('classe_database.php');
 
 class match
 {
+  // Attributs de la classe match
   private $id_match;
-  private $stade_match;
   private $date_match;
-  private $enCours;
+  private $estEnCours;
+  private $cours_match;
+  private $joueur1_match;
+  private $joueur2_match;
 
-  /* GETTERS / SETTERS */
-  function getID()
+  private $con; // Variable utilisée pour la chaine de connexion
+
+  /* GET/SET DE LA CLASSE MATCH */
+  public function getID()
   {
     return $this->id_match;
   }
 
-  function setID($p_id)
+  public function setID($p)
   {
-    $this->id_match = $p_id;
+    $this->id_match = $p;
   }
 
-  function getStade()
-  {
-    return $this->stade_match;
-  }
-
-  function setStade($p_stade)
-  {
-    $this->stade_match = $p_stade;
-  }
-
-  function getDate()
+  public function getDate()
   {
     return $this->date_match;
   }
 
-  // Date à insérer au format dd-mm-YYYY
-  function setDate($p_date)
+  // La date est un datetime, est vérifiee lors du set et retourne une erreur
+  // Si le datetime est incorrect
+  public function setDate($p)
   {
-    $this->date_match = $p_date;
+    $format ="Y-m-d H:i:s"; // Le "H" majuscule pour des heures en 24 heures
+    try
+    {
+      if(($date = DateTime::createFromFormat($format,$p)) === false)
+        throw new Exception;
+      $this->date_match = $p;
+    }
+    catch(Exception $e)
+    {
+       trigger_error("Le format de la date et de l'heure est invalide", E_USER_WARNING);
+       return;
+    }
   }
 
-  // Permet de remplir l'attribut par la date actuelle du serveur
-  function setDateActuelle()
+  public function getEstEnCours()
   {
-    $this->date_match = date("d-m-Y");
+    return $this->estEnCours;
   }
 
-  function getEnCours()
+  public function setEstEnCours($p)
   {
-    return $this->enCours;
+    $this->estEnCours = $p;
   }
 
-  function setEnCours($p_enCours)
+  public function getCours()
   {
-    $this->enCours = $p_enCours;
+    $this->cours_match;
   }
 
-  /* FIN GETTERS / SETTERS */
-  //----------------------------------------------------------------------------
-  // Méthode permettant de créer un nouveau match "vide" sans joueur
-  // Le JSON va retourner les infos sur le match créer si cela ce passe bien
-  // sinon il retournera un message d'erreur
-  // PARAM : $date : Si = true, alors la date sera celle du jour / Sinon on la définit
-  //----------------------------------------------------------------------------
-  function creerMatch($boolDate, $date)
+  public function setCours($p)
   {
-    if($boolDate == true)
-      $this->setDateActuelle();
-    else
-      $this->setDate($date);
-
-    $req = "INSERT INTO match (nom_stade, )"
+    $this->cours_match = $p;
   }
+
+  public function setJ1($p)
+  {
+    $this->joueur1_match = $p;
+  }
+
+  public function getJ1()
+  {
+    return $this->joueur1_match;
+  }
+
+  public function setJ2($p)
+  {
+    $this->joueur2_match = $p;
+  }
+
+  public function getJ2()
+  {
+    return $this->joueur2_match;
+  }
+
+  /* FIN GET/SET */
+
+  // Constructeur vide
+  public function __construct()
+  {
+    $this->id_match = 0;
+    $this->date_match = '0000-00-00 00:00:00';
+    $this->estEnCours = false;
+    $this->cours_match = '';
+    $this->joueur1_match = '';
+    $this->joueur2_match = '';
+  }
+
+  // Fonction pour récupérer toutes les informations sur un match
+  // l'ID est récupérer dans la classe, et si il est correct, les informations en JSON
+  // sont retournées avec $out['message'] contenant un message de confirmation
+  // Sinon, si l'ID envoyé est incorrect, $out['message'] contiendra le message
+  // d'erreur correspondant
+  public function selectionnerMatch()
+  {
+    // Chaine de connexion à la base de données
+    $db = db::getInstance();
+    $this->con = $db->getDB();
+
+    $req = "SELECT * FROM matchs WHERE id_match = {$this->getID()}";
+
+    try
+    {
+      $stm = $this->con->prepare($req);
+      $stm->execute();
+      while($res = $stm->fetch(PDO::FETCH_ASSOC))
+      {
+        $out[] = $res;
+      }
+
+      // Retourne seulement {"message":"erreur"} si une erreur est survenue
+      // Sinon, cela retourne toutes les infos sur le match sélectionné
+      if(empty($out))
+      {
+        $out['message'] = "ERREUR : l'ID du match pass&eacute; en parametre est incorrect. Merci de corriger cela.";
+      }
+      else
+      {
+        $out['message'] = "ok";
+      }
+
+      return print(json_encode($out));
+    }
+    catch(PDOException $e)
+    {
+      echo "ERREUR : Impossible de recuperer les infos de connexion en BDD \n";
+      echo "MESSAGE ERREUR : " .$e->getMessage();
+    }
+    // Puis on vide la chaine de connexion
+    $this->con = null;
+  }
+
+  public function getAllMatch()
+  {
+    // Chaine de connexion à la base de données
+    $db = db::getInstance();
+    $this->con = $db->getDB();
+
+    $req = "SELECT * FROM matchs";
+    try
+    {
+      $stm = $this->con->prepare($req);
+      $stm->execute();
+      while($res = $stm->fetch(PDO::FETCH_ASSOC))
+      {
+        $out[] = $res;
+      }
+
+      if(empty($out))
+      {
+        $out['message'] = "ERREUR : Aucun match present en base ";
+      }
+      else
+      {
+        $out['message'] = "ok";
+      }
+
+      return print(json_encode($out));
+    }
+    catch(PDOException $e)
+    {
+      echo "ERREUR : Impossible de recuperer la liste des matchs en BDD ";
+      echo "MESSAGE ERREUR : " .$e->getMessage();
+    }
+    $this->con = null;
+  }
+
 }
