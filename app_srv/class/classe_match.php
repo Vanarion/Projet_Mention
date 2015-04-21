@@ -127,6 +127,12 @@ class match
       while($res = $stm->fetch(PDO::FETCH_ASSOC))
       {
         $out[] = $res;
+        $this->id_match = $res['id_match'];
+        $this->date_match = $res['date_match'];
+        $this->estEnCours = $res['estEnCours'];
+        $this->cours_match =  $res['cours_match'];
+        $this->joueur1_match = $res['joueur1_match'];
+        $this->joueur2_match = $res['joueur2_match'];
       }
 
       // Retourne seulement {"message":"erreur"} si une erreur est survenue
@@ -186,4 +192,88 @@ class match
     $this->con = null;
   }
 
+  // l'id du match a lancer sera celui en attribut de la classe
+  // Retourne vrai si le match a bien été lancé, sinon retourne faux
+  public function lancerMatch()
+  {
+    // Chaine de connexion à la base de données
+    $db = db::getInstance();
+    $this->con = $db->getDB();
+
+    $req = "UPDATE matchs SET estEnCours = 1 WHERE id_match = {$this->getID()}";
+    $stm = $this->con->prepare($req);
+
+    try
+    {
+      $stm->execute();
+      return true;
+    }
+    catch(PDOException $e)
+    {
+      echo "ERREUR : Impossible de mettre a jour le champ de la table match ";
+      echo "MESSAGE ERREUR : " .$e->getMessage();
+      return false;
+    }
+    $this->con = null;
+  }
+
+  public function fermerMatch()
+  {
+    // Chaine de connexion à la base de données
+    $db = db::getInstance();
+    $this->con = $db->getDB();
+
+    $req = "UPDATE matchs SET estEnCours = 0 WHERE id_match = {$this->getID()} ";
+    $stm = $this->con->prepare($req);
+    try
+    {
+      $stm->execute();
+      return true;
+    }
+    catch(PDOException $e)
+    {
+      echo "ERREUR : Impossible de mettre a jour le champ de la table match";
+      echo "MESSAGE ERREUR : ".$e->getMessage();
+    }
+    $this->con = null; // Vidage de la chaine de connexion
+  }
+
+  // Permet de récuperer toutes les informations sur un joueur en fonction du param
+  // 1 = j1, 2 = j2
+  // Retourne un tableau contenant toutes les attributs du joueurs
+  public function getJoueur($j)
+  {
+    if($j != 1 && $j != 2)
+      echo "ERREUR : Le numero du joueur est different de 1 ou 2, merci de corriger cela";
+
+    // Chaine de connexion à la BDD
+    $db = db::getInstance();
+    $this->con = $db->getDB();
+    $joueur = array();
+
+    if($j == 1)
+      $req = "SELECT * FROM joueurs WHERE id_joueur = {$this->getJ1()} ";
+    else if($j == 2)
+      $req = "SELECT * FROM joueurs WHERE id_joueur = {$this->getJ2() } ";
+    else
+      $req = "";
+
+    $stm = $this->con->prepare($req);
+    try
+    {
+      $stm->execute();
+      while($res = $stm->fetch(PDO::FETCH_ASSOC))
+      {
+
+      }
+    }
+    catch(PDOException $e)
+    {
+      echo "ERREUR : Impossible de recuperer le joueur";
+      echo "MESSAGE ERREUR : " .$e->getMessage();
+      return 0;
+    }
+    $this->con = null;
+    return $joueur;
+  }
 }
