@@ -1,0 +1,87 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/String1"
+        android:gravity="center"
+        android:textSize="@dimen/normal_padding"
+        android:background="@color/firstBar"/>
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/layout_padding_top"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:textSize="@dimen/big_text_size"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/enter_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/hint_mail"
+            android:textSize="@dimen/big_text_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/normal_padding"
+            android:text="@string/password"
+            android:textSize="@dimen/big_text_size"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/enter_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/hint_pass"
+            android:textSize="@dimen/big_text_size" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bouton"
+            android:id="@+id/button"
+            android:layout_gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"   />
+
+
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/firstpagelogo"
+        android:layout_alignParentBottom="true" />
+
+    <TextView
+        android:id="@+id/bottommsg"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/logString1"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+       />
+
+
+</RelativeLayout>
+
+

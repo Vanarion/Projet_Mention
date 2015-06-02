@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Arbitre1</string>
+
+    <string name="hello_world">Bonjour</string>
+    <string name="bonjour">Connecté en tant que : </string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="create_account">Créer un compte</string>
+    <string name="email">Login</string>
+    <string name="password">Mot de passe</string>
+    <string name="hint_mail">"Ici : L'adresse email de l'utilisateur"</string>
+    <string name="hint_pass">"Ici : Le mot de passe de l'utilisateur"</string>
+    <string name="bouton">Valider</string>
+    <string name="playedmatch">Matchs joués</string>
+    <string name="loggedString1">Matches en cours</string>
+    <string name="String1">Application Rolland Garros</string>
+    <string name="logString1">Connectez vous pour accéder aux matches</string>
+    <string name="court_display">Ici: court du match</string>
+    <string name="match_display">Ici: joueurs du match</string>
+    <string name="score1">Score joueur 1</string>
+    <string name="score2">Score joueur 2</string>
+
+</resources>
+
