@@ -67,23 +67,23 @@ class user
     {
       $stm = $this->con->prepare($req);
       $stm->execute();
-      while($res = $stm->fetch(PDO::FETCH_ASSOC))
-      {
-        $out[] = $res;
-      }
+      $out = array();
+      $results = $stm->fetchAll(PDO::FETCH_ASSOC);
 
       // Retourne seulement {"message":"erreur"} si l'username/mdp est incorrect
       // Sinon, cela retourne toutes les infos de l'user avec message=OK
-      if(empty($out))
+      if(empty($results))
       {
-        $out['message'] = "ERREUR : Le nom d'utilisateur ou le mot de passe saisi est incorrect ";
+        $out['0']['message'] = "ERREUR";
+        $out = array('return' => $out);
       }
       else
       {
-        $out['message'] = "ok";
+        $out['0']['message'] = "OK";
+        $out = array('return' => $out);
       }
 
-      return print(json_encode($out));
+      echo(json_encode($out));
     }
     catch(PDOException $e)
     {

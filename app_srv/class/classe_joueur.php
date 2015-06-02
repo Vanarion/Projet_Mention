@@ -1,5 +1,5 @@
 <?
-
+require_once('classe_database.php');
 //Classe : classe_joueur.php
 //Auteur : VERRIER Alexandre
 //Date   : 25/02/15

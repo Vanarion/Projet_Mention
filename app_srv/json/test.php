@@ -1,8 +1,8 @@
 <?
 //require_once('../class/classe_match.php');
 //require_once('../class/classe_joueur.php');
-// require_once('../class/classe_utilisateur.php');
-require_once('../class/class_score.php');
+ require_once('../class/classe_utilisateur.php');
+//require_once('../class/class_score.php');
 
 
 /* Vérification de date :
@@ -29,12 +29,17 @@ $match = new match();
 $res = $match->getAllMatch();
 */
 
-/* Récupération d'un joueur par nom/prénom
+/*Récupération d'un joueur par nom/prénom
 $j = new joueur();
 $j->setNom("alex");
 $j->setPrenom("alex");
 $j->getJoueurParNom();
 */
+
+		$u = new user();
+		$u->setName('alex');
+		$u->setPassword('alex');
+		$u->connexion();
 
 /* Récupération d'un joueur par son ID
 $j2 = new joueur();
